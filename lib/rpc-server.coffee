@@ -19,10 +19,10 @@ jsonRpcServer =
 					response: result
 					id: id
 			catch err
-				response = @_buildError 'params', id
+				response = @_errorFor 'params', id
 				response.error.data = err.stack
 		else
-			response = @_buildError 'method', id
+			response = @_errorFor 'method', id
 		response.jsonrpc = '2.0'
 		response if id
 
@@ -31,7 +31,7 @@ jsonRpcServer =
 			console.log 'invoking batch', batchRequest
 			batchResponse = (rpcRequest for rpcRequest in batchRequest when (rpcRequest = @_invokeRpc(rpcRequest))?)
 		catch err
-			batchResponse = @_buildError err.message
+			batchResponse = @_errorFor err.message
 
 	_handleRpc: (rpcRequest) ->
 		isBatch = Array.isArray rpcRequest
@@ -43,11 +43,11 @@ jsonRpcServer =
 				response = @_invokeRpc rpcRequest
 			catch err
 				console.log 'err', err
-				response = @_buildError(err.message)
+				response = @_errorFor(err.message)
 		response
 
 
-	_buildError: (err, id) ->
+	_errorFor: (err, id) ->
 		error = jsonRpcServer.errors[err]
 		return {error: error, id: id or null}
 
