@@ -4,9 +4,9 @@ jFrame = require './json-frame'
 
 tcpJsonRpcClient = Object.create jsonRpcClient
 
-tcpJsonRpcClient.init = (options) ->
-	lengthPrefix = options? options.lengthPrefix or 2
-	@jsonFrame = jFrame {lengthPrefix: lengthPrefix}
+tcpJsonRpcClient.init = (options = {lengthPrefix: 2}) ->
+	#lengthPrefix = options? options.lengthPrefix or 2
+	@jsonFrame = jFrame options
 	jsonTransformer = @jsonFrame.jsonTransformer()
 	@_socket = net.connect options
 	@_socket.pipe jsonTransformer
@@ -22,8 +22,9 @@ tcpJsonRpcClient.invoke = (method, params, fn) ->
 	isBatch = typeof method is 'function'
 	throw Error('Batch request must have a second argument as a callback for result') if isBatch and typeof params isnt 'function'
 	if typeof params is 'function'
-		fn = params
-		params = null
+		[fn, params] = [params, null]
+		#fn = params
+		#params = null
 	else if not Array.isArray(params) and typeof params isnt 'object' and typeof fn isnt 'function'
 		throw 'Either params must be an array/object or fn must be a function'
 	request = @buildRequest method, params
