@@ -24,7 +24,7 @@ jsonRpcServer =
 		else
 			response = @_errorFor 'method', id
 		response.jsonrpc = '2.0'
-		response if id
+		response if id?
 
 	_invokeBatch: (batchRequest) ->
 		try
