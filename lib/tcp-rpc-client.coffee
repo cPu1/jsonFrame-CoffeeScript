@@ -11,10 +11,8 @@ tcpJsonRpcClient.init = (options = {lengthPrefix: 2}) ->
 	@_socket = net.connect options
 	@_socket.pipe jsonTransformer
 	self = @
-	jsonTransformer.on 'data', (json) ->
-		self._handleResponse json
-
-	jsonTransformer.on 'parse error', console.log
+	jsonTransformer.on 'data', @_handleResponse.bind @
+	.on 'parse error', console.log
 
 tcpJsonRpcClient._fnQueue = {}
 
