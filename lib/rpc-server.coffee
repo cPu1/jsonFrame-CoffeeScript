@@ -28,7 +28,6 @@ jsonRpcServer =
 
 	_invokeBatch: (batchRequest) ->
 		try
-			console.log 'invoking batch', batchRequest
 			batchResponse = (rpcRequest for rpcRequest in batchRequest when (rpcRequest = @_invokeRpc(rpcRequest))?)
 		catch err
 			batchResponse = @_errorFor err.message
@@ -36,14 +35,12 @@ jsonRpcServer =
 	_handleRpc: (rpcRequest) ->
 		isBatch = Array.isArray rpcRequest
 		if isBatch
-			console.log 'invoking batcch', rpcRequest
 			response = @_invokeBatch rpcRequest
 		else
 			try
 				response = @_invokeRpc rpcRequest
 			catch err
-				console.log 'err', err
-				response = @_errorFor(err.message)
+				response = @_errorFor err.message
 		response
 
 
