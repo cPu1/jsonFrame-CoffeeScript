@@ -13,7 +13,6 @@ tcpJsonRpcServer.init = (options) ->
 
 		jsonTransformer.on 'data', (json) ->
 			response = self._handleRpc json
-			console.log 'handled', response
 			socket.write jsonFrame.build response if Array.isArray(response) and response.length or response.id
 		.on 'parse error', (err) ->
 			parseError = self._buildError err
